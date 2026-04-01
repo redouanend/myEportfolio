@@ -1,34 +1,44 @@
-# myEportfolio
-Générateur de CV/Eportfolio
-1)Description
+# Générateur de CV / ePortfolio
+
+## Description
 
 Ce projet consiste à créer une application web permettant de générer un ePortfolio dynamique.
 
 L’objectif est de permettre à un utilisateur de :
 
-créer un portfolio
-ajouter des projets
-ajouter des compétences
-afficher son portfolio sous forme de page web
+- créer un portfolio ;
+- ajouter des projets ;
+- ajouter des compétences ;
+- afficher son portfolio sous forme de page web.
 
-Le backend est développé avec FastAPI, et le frontend sera géré via templates HTML (Jinja2).
+Le backend est développé avec FastAPI, et le frontend est géré via des templates HTML avec Jinja2.
 
-Stack technique
-Python
-FastAPI
-Pydantic (validation des données)
-Jinja2 (templates HTML)
-(plus tard) Base de données SQL d'aprés ce que le prof a dis.
+---
 
-2)Structure du projet (actuelle)
+## Stack technique
+
+- Python
+- FastAPI
+- Pydantic (validation des données)
+- Jinja2 (templates HTML)
+- Base de données SQL (à venir)
+
+---
+
+## Structure du projet
+
+```bash
 myEportfolio/
 │
-├── main.py          # routes FastAPI
-├── models.py        # modèles Pydantic
-├── templates/       # templates HTML (à venir)
+├── main.py        # Routes FastAPI
+├── models.py      # Modèles Pydantic
+├── templates/     # Templates HTML
 └── README.md
+```
 
-3)Modélisation des données
+---
+
+## Modélisation des données
 
 Nous utilisons des classes Pydantic pour structurer les données.
 
@@ -42,7 +52,11 @@ validation automatique
 typage clair
 communication propre entre frontend et backend
 
-4)Routes API (V1)
+
+---
+
+
+## Routes API (V1)
 Portfolio
 POST /portfolios → créer un portfolio
 GET /portfolios → récupérer tous les portfolios
