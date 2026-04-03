@@ -1,20 +1,26 @@
+from typing import List, Optional
 from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, EmailStr, HttpUrl
-from typing import List, Optional
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 
 templates = Jinja2Templates(directory="templates")
-
 app = FastAPI()
 
-portfolios = []
+# ----- DATA EN MÉMOIRE -----
+portfolios: List["Portfolio"] = []
+
+
+# ----- MODELS -----
+class Skill(BaseModel):
+    name: str
+    level: Optional[int] = None  # facultatif
 
 
 class Project(BaseModel):
     name: str
     description: str
-    technologies: List[str] = []
+    technologies: Optional[List[str]] = []
     github_url: Optional[HttpUrl] = None
     demo_url: Optional[HttpUrl] = None
 
@@ -35,10 +41,6 @@ class Education(BaseModel):
     description: Optional[str] = None
 
 
-class Skill(BaseModel):
-    name: str
-
-
 class SocialLink(BaseModel):
     platform: str
     url: HttpUrl
@@ -51,33 +53,14 @@ class Portfolio(BaseModel):
     phone: Optional[str] = None
     location: Optional[str] = None
     bio: str
-    skills: List[str] = []
+    skills: List[Skill] = []
     projects: List[Project] = []
     experiences: List[Experience] = []
     education: List[Education] = []
     social_links: List[SocialLink] = []
 
 
-# Modèles Pydantic
-class Skill(BaseModel):
-    name: str
-    level: Optional[int] = None  # facultatif
-
-
-class Project(BaseModel):
-    name: str
-    description: str
-
-
-class Portfolio(BaseModel):
-    full_name: str
-    title: str
-    email: EmailStr
-    bio: str
-    skills: List[Skill] = []
-    projects: List[Project] = []
-
-
+# ----- EXEMPLE -----
 example_portfolio = Portfolio(
     full_name="Alexandre Dupont",
     title="Développeur Full Stack",
@@ -147,10 +130,10 @@ example_portfolio = Portfolio(
     ],
 )
 
-portfolios = [example_portfolio]
+portfolios.append(example_portfolio)
 
 
-# Routes Portfolio
+# ----- ROUTES PORTFOLIO -----
 @app.post("/portfolios")
 def create_portfolio(portfolio: Portfolio):
     portfolios.append(portfolio)
@@ -169,7 +152,8 @@ def read_portfolio(request: Request, portfolio_id: int):
 
     portfolio = portfolios[portfolio_id]
     return templates.TemplateResponse(
-        "portfolio.html", {"request": request, "portfolio": portfolio}
+        "portfolio.html",
+        {"request": request, "portfolio": portfolio.dict()},  # <-- converti en dict
     )
 
 
@@ -189,7 +173,7 @@ def delete_portfolio(portfolio_id: int):
     return {"message": "Portfolio deleted"}
 
 
-# Routes Projects
+# ----- ROUTES PROJECTS -----
 @app.post("/portfolios/{portfolio_id}/projects")
 def add_project(portfolio_id: int, project: Project):
     if portfolio_id >= len(portfolios) or portfolio_id < 0:
@@ -221,7 +205,7 @@ def delete_project(portfolio_id: int, project_id: int):
     return {"message": "Project deleted"}
 
 
-# Routes Skills
+# ----- ROUTES SKILLS -----
 @app.post("/portfolios/{portfolio_id}/skills")
 def add_skill(portfolio_id: int, skill: Skill):
     if portfolio_id >= len(portfolios) or portfolio_id < 0:
