@@ -2,130 +2,515 @@
 <html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
-    <title>{{ portfolio.full_name }} - {{ portfolio.title }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            padding: 2rem;
-            background-color: #f8f9fa;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ portfolio.full_name }} — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0e0e0f;
+      --bg2: #161618;
+      --bg3: #1e1e21;
+      --border: #2a2a2e;
+      --text: #e8e8e4;
+      --muted: #888884;
+      --accent: #c8f060;
+      --accent2: #60c8f0;
+      --radius: 12px;
+    }
 
-        h1,
-        h2,
-        h3 {
-            margin-top: 1rem;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        .section {
-            margin-bottom: 2rem;
-        }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
 
-        .skill {
-            display: inline-block;
-            margin: 0.2rem 0.5rem;
-            padding: 0.3rem 0.6rem;
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-        }
+    /* ── Layout ── */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
 
-        .project,
-        .experience,
-        .education {
-            margin-bottom: 1rem;
-            padding: 1rem;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        }
+    /* ── Header ── */
+    header {
+      padding: 64px 0 48px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 56px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: end;
+    }
 
-        .social-links a {
-            margin-right: 1rem;
-        }
-    </style>
+    .header-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .header-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .header-meta {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      align-items: center;
+    }
+
+    .chip {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .chip.highlight {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: rgba(200, 240, 96, 0.06);
+    }
+
+    .social-links {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+    }
+
+    .social-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+
+    .social-links a:hover {
+      color: var(--accent2);
+    }
+
+    /* ── Bio ── */
+    .bio {
+      font-size: 1.15rem;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.8;
+      max-width: 620px;
+      margin-bottom: 56px;
+      padding-left: 20px;
+      border-left: 2px solid var(--accent);
+    }
+
+    /* ── Sections ── */
+    section {
+      margin-bottom: 56px;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Skills ── */
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .skill-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      color: var(--text);
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .skill-tag:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Level indicator */
+    .skill-tag[data-level]::after {
+      content: attr(data-level-dots);
+      margin-left: 8px;
+      color: var(--accent);
+      font-size: 0.6rem;
+    }
+
+    /* ── Cards (projects, experiences, education) ── */
+    .card-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      transition: border-color 0.2s;
+    }
+
+    .card:hover {
+      border-color: #3a3a40;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .card-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      white-space: nowrap;
+      margin-top: 3px;
+    }
+
+    .card-subtitle {
+      font-size: 0.85rem;
+      color: var(--accent2);
+      margin-bottom: 10px;
+      font-weight: 400;
+    }
+
+    .card-description {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* Project specific */
+    .tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 14px;
+    }
+
+    .tech-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 8px;
+      letter-spacing: 0.03em;
+    }
+
+    .project-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .project-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      text-decoration: none;
+      border: 1px solid rgba(200, 240, 96, 0.3);
+      border-radius: 6px;
+      padding: 4px 12px;
+      transition: background 0.2s;
+    }
+
+    .project-links a:hover {
+      background: rgba(200, 240, 96, 0.08);
+    }
+
+    /* ── Contact ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .contact-item {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+    }
+
+    .contact-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .contact-value {
+      font-size: 0.88rem;
+      color: var(--text);
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    header,
+    .bio,
+    section {
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .bio {
+      animation-delay: 0.1s;
+    }
+
+    section:nth-child(1) {
+      animation-delay: 0.15s;
+    }
+
+    section:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    section:nth-child(3) {
+      animation-delay: 0.25s;
+    }
+
+    section:nth-child(4) {
+      animation-delay: 0.3s;
+    }
+
+    section:nth-child(5) {
+      animation-delay: 0.35s;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="text-center mb-4">
-            <h1>{{ portfolio.full_name }}</h1>
-            <h4>{{ portfolio.title }}</h4>
-            <p>Email: <a href="mailto:{{ portfolio.email }}">{{ portfolio.email }}</a> |
-                {% if portfolio.phone %}Tel: {{ portfolio.phone }} |{% endif %}
-                {% if portfolio.location %}Localisation: {{ portfolio.location }}{% endif %}
-            </p>
-        </div>
+  <div class="container">
 
-        <!-- Bio -->
-        <div class="section">
-            <h2>À propos de moi</h2>
-            <p>{{ portfolio.bio }}</p>
+    <!-- ── HEADER ── -->
+    <header>
+      <div>
+        <h1 class="header-title">
+          {{ portfolio.full_name.split()[0] }}<br>
+          <em>{{ portfolio.full_name.split()[1:] | join(' ') }}</em>
+        </h1>
+        <div class="header-meta">
+          <span class="chip highlight">{{ portfolio.title }}</span>
+          {% if portfolio.location %}
+          <span class="chip">{{ portfolio.location }}</span>
+          {% endif %}
+          {% if portfolio.phone %}
+          <span class="chip">{{ portfolio.phone }}</span>
+          {% endif %}
+          <span class="chip">{{ portfolio.email }}</span>
         </div>
+      </div>
 
-        <!-- Compétences -->
-        <div class="section">
-            <h2>Compétences</h2>
-            {% for skill in portfolio.skills %}
-            <span class="skill">{{ skill.name }}{% if skill.level %} ({{ skill.level }}/10){% endif %}</span>
+      {% if portfolio.social_links %}
+      <div class="social-links">
+        {% for link in portfolio.social_links %}
+        <a href="{{ link.url }}" target="_blank" rel="noopener">
+          ↗ {{ link.platform }}
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </header>
+
+    <!-- ── BIO ── -->
+    {% if portfolio.bio %}
+    <p class="bio">{{ portfolio.bio }}</p>
+    {% endif %}
+
+    <!-- ── COMPÉTENCES ── -->
+    {% if portfolio.skills %}
+    <section>
+      <p class="section-label">Compétences</p>
+      <div class="skills-grid">
+        {% for skill in portfolio.skills %}
+        <span class="skill-tag" {% if skill.level %} data-level="{{ skill.level }}"
+          data-level-dots="{{ '●' * skill.level }}{{ '○' * (5 - skill.level) }}" {% endif %}>{{ skill.name }}</span>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- ── PROJETS ── -->
+    {% if portfolio.projects %}
+    <section>
+      <p class="section-label">Projets</p>
+      <div class="card-list">
+        {% for project in portfolio.projects %}
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">{{ project.name }}</h2>
+          </div>
+          <p class="card-description">{{ project.description }}</p>
+          {% if project.technologies %}
+          <div class="tech-list">
+            {% for tech in project.technologies_list %}
+            <span class="tech-badge">{{ tech }}</span>
             {% endfor %}
+          </div>
+          {% endif %}
+          {% if project.github_url or project.demo_url %}
+          <div class="project-links">
+            {% if project.github_url %}
+            <a href="{{ project.github_url }}" target="_blank" rel="noopener">GitHub →</a>
+            {% endif %}
+            {% if project.demo_url %}
+            <a href="{{ project.demo_url }}" target="_blank" rel="noopener">Demo →</a>
+            {% endif %}
+          </div>
+          {% endif %}
         </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
 
-        <!-- Projets -->
-        <div class="section">
-            <h2>Projets</h2>
-            {% for project in portfolio.projects %}
-            <div class="project">
-                <h3>{{ project.name }}</h3>
-                <p>{{ project.description }}</p>
-                {% if project.technologies %}
-                <p><strong>Technologies :</strong> {{ project.technologies | join(', ') }}</p>
-                {% endif %}
-                {% if project.github_url %}
-                <a href="{{ project.github_url }}" target="_blank">GitHub</a>
-                {% endif %}
-                {% if project.demo_url %}
-                | <a href="{{ project.demo_url }}" target="_blank">Démo</a>
-                {% endif %}
+    <!-- ── EXPÉRIENCES ── -->
+    {% if portfolio.experiences %}
+    <section>
+      <p class="section-label">Expériences</p>
+      <div class="card-list">
+        {% for exp in portfolio.experiences %}
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">{{ exp.title }}</h2>
+              <p class="card-subtitle">{{ exp.company }}</p>
             </div>
-            {% endfor %}
+            <span class="card-date">
+              {{ exp.start_date }}{% if exp.end_date %} → {{ exp.end_date }}{% else %} → présent{% endif %}
+            </span>
+          </div>
+          <p class="card-description">{{ exp.description }}</p>
         </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
 
-        <!-- Expériences -->
-        <div class="section">
-            <h2>Expériences</h2>
-            {% for exp in portfolio.experiences %}
-            <div class="experience">
-                <h3>{{ exp.title }} - {{ exp.company }}</h3>
-                <p><em>{{ exp.start_date }}{% if exp.end_date %} - {{ exp.end_date }}{% endif %}</em></p>
-                <p>{{ exp.description }}</p>
+    <!-- ── FORMATION ── -->
+    {% if portfolio.education %}
+    <section>
+      <p class="section-label">Formation</p>
+      <div class="card-list">
+        {% for edu in portfolio.education %}
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">{{ edu.degree }}</h2>
+              <p class="card-subtitle">{{ edu.school }}</p>
             </div>
-            {% endfor %}
+            <span class="card-date">
+              {{ edu.start_date }}{% if edu.end_date %} → {{ edu.end_date }}{% endif %}
+            </span>
+          </div>
+          {% if edu.description %}
+          <p class="card-description">{{ edu.description }}</p>
+          {% endif %}
         </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
 
-        <!-- Éducation -->
-        <div class="section">
-            <h2>Éducation</h2>
-            {% for edu in portfolio.education %}
-            <div class="education">
-                <h3>{{ edu.degree }} - {{ edu.school }}</h3>
-                <p><em>{{ edu.start_date }}{% if edu.end_date %} - {{ edu.end_date }}{% endif %}</em></p>
-                {% if edu.description %}
-                <p>{{ edu.description }}</p>
-                {% endif %}
-            </div>
-            {% endfor %}
+    <!-- ── CONTACT ── -->
+    <section>
+      <p class="section-label">Contact</p>
+      <div class="contact-grid">
+        <div class="contact-item">
+          <p class="contact-label">Email</p>
+          <p class="contact-value">{{ portfolio.email }}</p>
         </div>
+        {% if portfolio.phone %}
+        <div class="contact-item">
+          <p class="contact-label">Téléphone</p>
+          <p class="contact-value">{{ portfolio.phone }}</p>
+        </div>
+        {% endif %}
+        {% if portfolio.location %}
+        <div class="contact-item">
+          <p class="contact-label">Localisation</p>
+          <p class="contact-value">{{ portfolio.location }}</p>
+        </div>
+        {% endif %}
+        {% for link in portfolio.social_links %}
+        <div class="contact-item">
+          <p class="contact-label">{{ link.platform }}</p>
+          <p class="contact-value"><a href="{{ link.url }}" style="color: var(--accent2); text-decoration: none;"
+              target="_blank">{{ link.url }}</a></p>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
 
-        <!-- Liens sociaux -->
-        <div class="section social-links">
-            <h2>Liens sociaux</h2>
-            {% for link in portfolio.social_links %}
-            <a href="{{ link.url }}" target="_blank">{{ link.platform }}</a>
-            {% endfor %}
-        </div>
-    </div>
+  </div>
 </body>
 
 </html>
