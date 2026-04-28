@@ -91,14 +91,14 @@ Nous avons ajouté SQLAlchemy comme ORM (Object Relational Mapper) afin de rempl
 
 **Comment ça fonctionne ?**
 Requête HTTP entrante
-↓ validée par
-Pydantic (models.py)
-↓ convertie en
-SQLAlchemy (schemas.py)
-↓ sauvegardée dans
-SQLite (portfolio.db)
-↓ affichée via
-Jinja2 (portfolio.html)
+↓
+validée par Pydantic (models.py)
+↓
+convertie en SQLAlchemy (schemas.py)
+↓
+sauvegardée dans SQLite (portfolio.db)
+↓
+affichée via Jinja2 (portfolio.html)
 ↓
 Page HTML
 
